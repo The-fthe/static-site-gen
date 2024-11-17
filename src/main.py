@@ -1,11 +1,11 @@
-from textnode import TextNode
-from enum import Enum
+from textnode import TextNode, TextType
 
 
 def main():
-    # textNode = Enum('TextNode', {
-    #                 'TEXT': "this is a text node", 'TEXT_TYPE': "bold", 'URL': "https://www.boot.dev"})
-    textNode = TextNode("this is a text node", "bold",  "https://www.boot.dev")
+    textNode = TextNode("this is a text node",
+                        TextType.BOLD,
+                        "https://www.boot.dev"
+                        )
     print(textNode)
 
 
