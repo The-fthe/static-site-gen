@@ -1,30 +1,34 @@
 
 class HTMLNode:
-    def __init__(self, tag="", value="", children=None, props=[]):
+    def __init__(self, tag=None, value=None, children=None, props=[]):
         self.tag = tag
         self.value = value
         self.children = children
         self.props = props
 
     def to_html(self):
-        raise NotImplementedError
+        raise NotImplementedError("to_html method nto implemented")
 
     def props_to_html(self):
+        if self.props is None:
+            return ""
+
+        props_html = ""
         count = len(self.props.keys())
         if count == 0:
             return ""
 
-        s = ""
+        props_html = ""
         i = 0
         for key, value in self.props.items():
             if i != 0:
-                s += f" {key}=\"{value}\""
+                props_html += f" {key}=\"{value}\""
                 i += 1
                 continue
-            s += f"{key}=\"{value}\""
+            props_html += f"{key}=\"{value}\""
             i += 1
 
-        return s
+        return props_html
 
     def __repr__(self):
         if self.children is not None:
