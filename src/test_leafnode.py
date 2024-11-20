@@ -3,7 +3,7 @@ import unittest
 from htmlnode import LeafNode
 
 
-class TestHtmlNode(unittest.TestCase):
+class TestLeftNode(unittest.TestCase):
     def test_prop_to_tag(self):
         node = LeafNode("h1", None, None)
         check_html = "h1"
