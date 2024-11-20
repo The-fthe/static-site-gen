@@ -21,11 +21,7 @@ class HTMLNode:
         props_html = ""
         i = 0
         for key, value in self.props.items():
-            if i != 0:
-                props_html += f" {key}=\"{value}\""
-                i += 1
-                continue
-            props_html += f"{key}=\"{value}\""
+            props_html += f" {key}=\"{value}\""
             i += 1
 
         return props_html
@@ -46,11 +42,7 @@ class LeafNode(HTMLNode):
         if self.tag == None:
             return self.value
 
-        match self.tag:
-            case "p":
-                return f'<p>{self.value}</p>'
-            case "a":
-                return f'<a {self.props_to_html()}>{self.value}</a>'
+        return f'<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>'
 
     def __repr__(self):
         return f"{self.tag},{self.value}, {self.props_to_html()}"
