@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
@@ -78,6 +78,64 @@ class TestTextNode(unittest.TestCase):
                          "www.gogle.com"
                          )
         self.assertNotEqual(node, node2)
+
+    def test_textnode_to_html_type_text(self):
+        node2 = TextNode("this is a test",
+                         TextType.TEXT,
+                         None
+                         )
+        check_html = 'this is a test'
+        self.assertEqual(node2.text_node_to_html_node().to_html(), check_html)
+
+    def test_textnode_to_html_type_text(self):
+        node2 = TextNode("this is a test",
+                         TextType.TEXT,
+                         None
+                         )
+        check_html = 'this is a test'
+        self.assertEqual(text_node_to_html_node(node2).to_html(), check_html)
+
+    def test_textnode_to_html_type_bold(self):
+        node2 = TextNode("this is a test",
+                         TextType.BOLD,
+                         None
+                         )
+        check_html = '<b>this is a test</b>'
+        self.assertEqual(text_node_to_html_node(node2).to_html(), check_html)
+
+    def test_textnode_to_html_type_italic(self):
+        node2 = TextNode("this is a test",
+                         TextType.ITALIC,
+                         None
+                         )
+        check_html = '<i>this is a test</i>'
+        self.assertEqual(text_node_to_html_node(node2).to_html(), check_html)
+
+    def test_textnode_to_html_type_code(self):
+        node2 = TextNode("this is a test",
+                         TextType.CODE,
+                         None
+                         )
+        check_html = '<code>this is a test</code>'
+        self.assertEqual(text_node_to_html_node(node2).to_html(), check_html)
+
+    def test_textnode_to_html_type_link(self):
+        node2 = TextNode("this is a test",
+                         TextType.LINK,
+                         "www.google.com"
+                         )
+        check_html = '<a href="www.google.com">this is a test</a>'
+
+        self.assertEqual(text_node_to_html_node(node2).to_html(), check_html)
+
+    def test_textnode_to_html_type_img(self):
+        node2 = TextNode("this is a image",
+                         TextType.IMAGE,
+                         "www.google.com"
+                         )
+        check_html = '<img src="www.google.com" alt="this is a image"></img>'
+
+        self.assertEqual(text_node_to_html_node(node2).to_html(), check_html)
 
 
 if __name__ == "__main__":
