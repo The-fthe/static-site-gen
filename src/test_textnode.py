@@ -79,13 +79,8 @@ class TestTextNode(unittest.TestCase):
                          )
         self.assertNotEqual(node, node2)
 
-    def test_textnode_to_html_type_text(self):
-        node2 = TextNode("this is a test",
-                         TextType.TEXT,
-                         None
-                         )
-        check_html = 'this is a test'
-        self.assertEqual(node2.text_node_to_html_node().to_html(), check_html)
+
+class TestTextNodeToHTMLNode(unittest.TestCase):
 
     def test_textnode_to_html_type_text(self):
         node2 = TextNode("this is a test",
