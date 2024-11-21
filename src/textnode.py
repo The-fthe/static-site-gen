@@ -1,5 +1,6 @@
 from enum import Enum
 from htmlnode import LeafNode
+import re
 
 
 class TextType(Enum):
@@ -50,3 +51,36 @@ def text_node_to_html_node(text_node):
                              })
         case _:
             raise ValueError("Invalid textNode type")
+
+
+def split_nodes_delimiter(old_nodes, delimiter, text_type):
+    textNodes = []
+
+    for node in old_nodes:
+        is_delimiter = False
+        text = ""
+        for c in node.text:
+            if c is not delimiter:
+                text += c
+                continue
+
+            if c is delimiter and is_delimiter is False:
+                textNodes.append(TextNode(text, TextType.TEXT))
+                print(f"normal text: {text}")
+                text = ""
+                is_delimiter = True
+                continue
+
+            if is_delimiter and c is delimiter:
+                textNodes.append(TextNode(text, text_type))
+                print(f"delimiter text: {text}")
+                text = ""
+                is_delimiter = False
+                continue
+        if len(text) > 0:
+            textNodes.append(TextNode(text, TextType.TEXT))
+
+        if delimiter in node.text and is_delimiter is not False:
+            raise ValueError("delimiter is not close")
+
+    return textNodes
