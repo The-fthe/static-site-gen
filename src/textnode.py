@@ -66,19 +66,20 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
             if c is delimiter and is_delimiter is False:
                 textNodes.append(TextNode(text, TextType.TEXT))
-                print(f"normal text: {text}")
                 text = ""
                 is_delimiter = True
                 continue
 
-            if is_delimiter and c is delimiter:
+            if c is delimiter and is_delimiter:
                 textNodes.append(TextNode(text, text_type))
-                print(f"delimiter text: {text}")
                 text = ""
                 is_delimiter = False
                 continue
         if len(text) > 0:
-            textNodes.append(TextNode(text, TextType.TEXT))
+            if is_delimiter:
+                textNodes.append(TextNode(text, text_type))
+            else:
+                textNodes.append(TextNode(text, TextType.TEXT))
 
         if delimiter in node.text and is_delimiter is not False:
             raise ValueError("delimiter is not close")
