@@ -54,34 +54,22 @@ def text_node_to_html_node(text_node):
 
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
-    textNodes = []
-
-    for node in old_nodes:
-        is_delimiter = False
-        text = ""
-        for c in node.text:
-            if c is not delimiter:
-                text += c
+    new_nodes = []
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+        split_nodes = []
+        sections = old_node.text.split(delimiter)
+        if len(sections) % 2 == 0:
+            raise ValueError("Invalid markdown, formatted section not closed")
+        for i in range(len(sections)):
+            if sections[i] == "":
                 continue
-
-            if c is delimiter and is_delimiter is False:
-                textNodes.append(TextNode(text, TextType.TEXT))
-                text = ""
-                is_delimiter = True
-                continue
-
-            if c is delimiter and is_delimiter:
-                textNodes.append(TextNode(text, text_type))
-                text = ""
-                is_delimiter = False
-                continue
-        if len(text) > 0:
-            if is_delimiter:
-                textNodes.append(TextNode(text, text_type))
+            if i % 2 == 0:
+                split_nodes.append(TextNode(sections[i], TextType.TEXT))
             else:
-                textNodes.append(TextNode(text, TextType.TEXT))
+                split_nodes.append(TextNode(sections[i], text_type))
+        new_nodes.extend(split_nodes)
 
-        if delimiter in node.text and is_delimiter is not False:
-            raise ValueError("delimiter is not close")
-
-    return textNodes
+    return new_nodes

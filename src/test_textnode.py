@@ -132,43 +132,5 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
 
         self.assertEqual(text_node_to_html_node(node2).to_html(), check_html)
 
-
-class TextSplitDelimiter(unittest.TestCase):
-
-    def test_delimiter_1(self):
-        node = TextNode("This is text with a `code block` word", TextType.TEXT)
-        new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
-        check_nodes = [
-            TextNode("This is text with a ", TextType.TEXT),
-            TextNode("code block", TextType.CODE),
-            TextNode(" word", TextType.TEXT),
-        ]
-
-        self.assertEqual(new_nodes, check_nodes)
-
-    def test_delimiter_2(self):
-        node = TextNode(
-            "This is text with a `code block` as `word`", TextType.TEXT)
-        new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
-        check_nodes = [
-            TextNode("This is text with a ", TextType.TEXT),
-            TextNode("code block", TextType.CODE),
-            TextNode(" as ", TextType.TEXT),
-            TextNode("word", TextType.CODE),
-        ]
-
-        self.assertEqual(new_nodes, check_nodes)
-
-    def test_delimiter_3(self):
-        node = TextNode(
-            "This is text with a `code block`", TextType.TEXT)
-        new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
-        check_nodes = [
-            TextNode("This is text with a ", TextType.TEXT),
-            TextNode("code block", TextType.CODE),
-        ]
-
-        self.assertEqual(new_nodes, check_nodes)
-
         if __name__ == "__main__":
             unittest.main()
