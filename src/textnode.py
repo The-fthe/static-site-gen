@@ -30,6 +30,16 @@ class TextNode:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
 
 
+def markdown_to_blocks(markdown):
+    blocks = markdown.split("\n\n")
+    new_blocks = []
+    for block in blocks:
+        if block == "":
+            continue
+        new_blocks.append(block)
+    return new_blocks
+
+
 def text_to_textnodes(text):
     nodes = [TextNode(text, TextType.TEXT)]
     nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
