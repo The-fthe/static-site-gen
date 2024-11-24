@@ -36,7 +36,7 @@ def markdown_to_blocks(markdown):
     for block in blocks:
         if block == "":
             continue
-        new_blocks.append(block)
+        new_blocks.append(block.strip())
     return new_blocks
 
 
