@@ -4,8 +4,9 @@ from textnode import (
     TextNode,
     TextType,
     text_to_textnodes,
-    markdown_to_blocks
 )
+
+from blocks import (markdown_to_blocks, BlockType, block_to_block_type)
 
 
 class TestTextToTextNodes(unittest.TestCase):
@@ -73,5 +74,70 @@ This is the same paragraph on a new line
             ],
         )
 
+    def test_markdown_to_block_types(self):
+        blocks = [
+            "This is another paragraph with *italic* text and `code` here\nThis is the same paragraph on a new line",
+            "## This is **bolded** paragraph",
+            "``` This is a code block```",
+            ">This is **bolded** quote",
+            "* This is a unorder list1\n* with items",
+            "- This is a unorder list2\n* with items",
+            "1. This is a order list\n2. with items",
+        ]
+        checks = [
+            BlockType.PARAGRAPH,
+            BlockType.HEADING,
+            BlockType.CODE,
+            BlockType.QUOTE,
+            BlockType.UNORDERED_LIST,
+            BlockType.UNORDERED_LIST,
+            BlockType.ORDERED_LIST,
+        ]
+        for i in range(len(blocks)):
+            self.assertEqual(block_to_block_type(blocks[i]), checks[i])
+
+    def test_markdown_to_block_type_paragraph(self):
+        blocks = [
+            "This is another paragraph with *italic* text and `code` here\nThis is the same paragraph on a new line",
+            "#This is **bolded** paragraph",
+            "`` This is a code block```",
+            "<This is **bolded** quote",
+            "*This is a unorder list1\n* with items",
+            "-This is a unorder list2\n* with items",
+            "1.This is a order list\n3. with items",
+            "2.This is a order list\n1. with items",
+            "1.This is a order list\n1. with items",
+        ]
+        checks = [
+            BlockType.PARAGRAPH,
+            BlockType.PARAGRAPH,
+            BlockType.PARAGRAPH,
+            BlockType.PARAGRAPH,
+            BlockType.PARAGRAPH,
+            BlockType.PARAGRAPH,
+            BlockType.PARAGRAPH,
+            BlockType.PARAGRAPH,
+            BlockType.PARAGRAPH,
+        ]
+        for i in range(len(blocks)):
+            self.assertEqual(block_to_block_type(
+                blocks[i]), checks[i], f"index:{i} is not equal")
+
+    def test_markdown_to_block_type_orderlist(self):
+        blocks = [
+            "2.This is a order list\n3. with items\n4. with more item",
+            "1.This is a order list",
+            "0.This is a order list\n1. with items",
+            "0. This is a order list\n1. with items",
+        ]
+        checks = [
+            BlockType.ORDERED_LIST,
+            BlockType.ORDERED_LIST,
+            BlockType.ORDERED_LIST,
+            BlockType.ORDERED_LIST,
+        ]
+        for i in range(len(blocks)):
+            self.assertEqual(block_to_block_type(
+                blocks[i]), checks[i], f"index:{i} is not equal")
     if __name__ == "__main__":
         unittest.main()
