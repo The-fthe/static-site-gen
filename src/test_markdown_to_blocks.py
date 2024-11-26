@@ -78,10 +78,10 @@ This is the same paragraph on a new line
         blocks = [
             "This is another paragraph with *italic* text and `code` here\nThis is the same paragraph on a new line",
             "## This is **bolded** paragraph",
-            "``` This is a code block```",
+            "``` This is a code block\n```",
             ">This is **bolded** quote",
             "* This is a unorder list1\n* with items",
-            "- This is a unorder list2\n* with items",
+            "- This is a unorder list2\n- with items",
             "1. This is a order list\n2. with items",
         ]
         checks = [
@@ -94,7 +94,8 @@ This is the same paragraph on a new line
             BlockType.ORDERED_LIST,
         ]
         for i in range(len(blocks)):
-            self.assertEqual(block_to_block_type(blocks[i]), checks[i])
+            self.assertEqual(block_to_block_type(
+                blocks[i]), checks[i], f"index: {i} is not equal")
 
     def test_markdown_to_block_type_paragraph(self):
         blocks = [
@@ -125,10 +126,10 @@ This is the same paragraph on a new line
 
     def test_markdown_to_block_type_orderlist(self):
         blocks = [
-            "2.This is a order list\n3. with items\n4. with more item",
-            "1.This is a order list",
-            "0.This is a order list\n1. with items",
-            "0. This is a order list\n1. with items",
+            "1. This is a order list\n2. with items\n3. with more item",
+            "1. This is a order list",
+            "1. This is a order list\n2.  with items",
+            "1. This is a order list\n2. with items",
         ]
         checks = [
             BlockType.ORDERED_LIST,
