@@ -2,8 +2,7 @@ import unittest
 
 from textnode import (
     TextNode,
-    TextType,
-    text_to_textnodes,
+    TextType
 )
 
 from blocks import (markdown_to_blocks, BlockType, block_to_block_type)
