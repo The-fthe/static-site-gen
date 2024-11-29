@@ -72,12 +72,12 @@ def markdown_to_html_node(markdown):
 def text_to_children(text):
     block_type = block_to_block_type(text)
     match block_type:
-        # case BlockType.PARAGRAPH:
-        #     text_nodes = text_to_textnodes(text)
-        #     children = []
-        #     for text_node in text_nodes:
-        #         children.append(text_node_to_html_node(text_node))
-        #     return ParentNode("p", children)
+        case BlockType.PARAGRAPH:
+            text_nodes = text_to_textnodes(text)
+            children = []
+            for text_node in text_nodes:
+                children.append(text_node_to_html_node(text_node))
+            return ParentNode("p", children)
         case BlockType.HEADING:
             heading_count = text.count('#')
             text_nodes = text_to_textnodes(text.replace("#", "").strip())
