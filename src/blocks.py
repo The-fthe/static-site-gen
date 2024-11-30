@@ -73,7 +73,7 @@ def text_to_children(text):
     block_type = block_to_block_type(text)
     match block_type:
         case BlockType.PARAGRAPH:
-            text_nodes = text_to_textnodes(text)
+            text_nodes = text_to_textnodes(text.replace("\n", " "))
             children = []
             for text_node in text_nodes:
                 children.append(text_node_to_html_node(text_node))
@@ -86,42 +86,49 @@ def text_to_children(text):
                 children.append(text_node_to_html_node(text_node))
             return ParentNode(f"h{heading_count}", children)
         case BlockType.CODE:
-            text_nodes_code = text_to_textnodes(text.replace('`', "").strip())
-            stuffs = []
-            for text_node_code in text_nodes_code:
-                stuffs.append(text_node_to_html_node(text_node_code))
-            pre_node = ParentNode("pre", stuffs)
-            return ParentNode("code", [pre_node])
-        case BlockType.QUOTE:
-            text_nodes = text_to_textnodes(text.lstrip("> "))
+            if not text.startswith("```") or not text.endswith("```"):
+                raise ValueError("Invalid code block")
+            text_nodes_code = text_to_textnodes(text[4:-3].strip())
             children = []
+            for text_node_code in text_nodes_code:
+                children.append(text_node_to_html_node(text_node_code))
+            pre_node = ParentNode("code", children)
+            return ParentNode("pre", [pre_node])
+        case BlockType.QUOTE:
+            lines = text.split("\n")
+            children = []
+            new_lines = []
+            for line in lines:
+                if not line.startswith(">"):
+                    raise ValueError("Invalid quote block")
+                new_lines.append(line.lstrip(">").strip())
+            content = " ".join(new_lines)
+            text_nodes = text_to_textnodes(content)
             for text_node in text_nodes:
                 children.append(text_node_to_html_node(text_node))
             return ParentNode("blockquote", children)
         case BlockType.ORDERED_LIST:
             lines = text.split("\n")
             lists = []
-            for i in range(len(lines)):
-                text_nodes = text_to_textnodes(
-                    lines[i].replace(f"{i+1}. ", "")
-                )
+            for line in lines:
                 children = []
+                line = line[3:]
+                text_nodes = text_to_textnodes(line)
                 for text_node in text_nodes:
                     children.append(text_node_to_html_node(text_node))
-                lists.append(ParentNode("ol", children))
-            return ParentNode("li", lists)
+
+                lists.append(ParentNode("li", children))
+            return ParentNode("ol", lists)
         case BlockType.UNORDERED_LIST:
             lines = text.split("\n")
             lists = []
             for i in range(len(lines)):
-                text_nodes = text_to_textnodes(lines[i]
-                                               .replace("- ", "")
-                                               .replace("* ", "")
-                                               )
+                lines[i] = lines[i][2:]
+                text_nodes = text_to_textnodes(lines[i])
                 children = []
                 for text_node in text_nodes:
                     children.append(text_node_to_html_node(text_node))
-                lists.append(ParentNode("ul", children))
-            return ParentNode("li", lists)
+                lists.append(ParentNode("li", children))
+            return ParentNode("ul", lists)
         case _:
             pass
