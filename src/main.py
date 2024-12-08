@@ -17,10 +17,11 @@ def main():
     print("Copy static files to public directory")
     copy_files_recursive(dir_path_static, dir_path_public)
 
-    pg.generate_page(os.path.join(dir_path_static, "index.md"),
-                     os.path.join(dir_path_static, "./template.html"),
-                     os.path.join(dir_path_public, "index.html")
-                     )
+    pg.generate_pages_recursive(
+        dir_path_content,
+        os.path.join(dir_path_static, "template.html"),
+        dir_path_public
+    )
 
 
 if __name__ == "__main__":

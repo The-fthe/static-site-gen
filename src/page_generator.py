@@ -6,6 +6,18 @@ from blocks import (
 )
 
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for filename in os.listdir(dir_path_content):
+        content_path = os.path.join(dir_path_content, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        if os.path.isfile(content_path):
+            generate_page(content_path, template_path,
+                          dest_path.replace(".md", ".html"))
+        else:
+            generate_pages_recursive(content_path, template_path, dest_path)
+    pass
+
+
 def generate_page(from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {
           dest_path} using {template_path}")
@@ -23,7 +35,7 @@ def generate_page(from_path, template_path, dest_path):
             .replace('{{ Content }}', content)
 
         if template is None:
-            raise ValueError("Template is empty")
+            raise ValueError("Template is em.pty")
         dest_dir_path = os.path.dirname(dest_path)
         if dest_dir_path != "":
             os.makedirs(dest_dir_path, exist_ok=True)
@@ -32,10 +44,14 @@ def generate_page(from_path, template_path, dest_path):
 
 
 def main():
-    path_markdown = '../static/content/index.md'
+    path_markdown = '../content/index.md'
     path_template = '../static/template.html'
-    path_public = '../public/index.html'
-    generate_page(path_markdown, path_template, path_public)
+    path_static = '../static'
+    path_public = '../public'
+    path_content = '../content'
+
+    generate_pages_recursive(path_content, path_template, path_public)
+    # generate_page(path_markdown, path_template, path_public)
 
 
 # main()
